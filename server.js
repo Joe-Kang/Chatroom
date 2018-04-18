@@ -1,23 +1,28 @@
-// require express
-var express = require("express");
-// path module
-var path = require("path");
-// create the express app
-var app = express();
-var bodyParser = require('body-parser');
-// use it!
-app.use(bodyParser.urlencoded({ extended: true }));
-// static content
-app.use(express.static(path.join(__dirname, "./static")));
-// setting up ejs and our views folder
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'ejs');
-// root route to render the index.ejs view
-app.get('/', function(req, res) {
- res.render("index");
-})
+var express = require("express"); // require express
+var path = require("path"); // path module
+var bodyParser = require('body-parser'); 
+var app = express(); // create the express app
 
-// tell the express app to listen on port 8000
-app.listen(8000, function() {
- console.log("listening on port 8000");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "./static"))); // static content
+app.set('views', path.join(__dirname, './views')); // setting up views folder
+app.set('view engine', 'ejs'); // setting up ejs
+
+var server = app.listen(8000, function() { // tell the express app to listen on port 8000
+    console.log("listening on port 8000");
 });
+
+var io = require('socket.io').listen(server); // socket
+
+// root route to render the index.ejs view
+app.get('/', function(req, res) { res.render("index"); })
+
+// socket code
+io.sockets.on('connection', function(socket) {
+    console.log("id: ", socket.id)
+
+    socket.on("entered_name", function(data) {
+        console.log(data.name)
+    })
+})
