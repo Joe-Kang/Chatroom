@@ -18,11 +18,17 @@ var io = require('socket.io').listen(server); // socket
 // root route to render the index.ejs view
 app.get('/', function(req, res) { res.render("index"); })
 
+var names = {}
+var size = 0
 // socket code
 io.sockets.on('connection', function(socket) {
     console.log("id: ", socket.id)
 
     socket.on("entered_name", function(data) {
-        console.log(data.name)
+        names[size] = data.name
+        size++
+        io.emit('new_name', {new_name: data.name})
+        io.emit('existing_names', {names: names})
     })
+
 })

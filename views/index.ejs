@@ -14,11 +14,17 @@
     <script type ="text/javascript">
         $(document).ready(function() {
             var socket = io.connect() 
+
             $('form').submit(function(e) {
                 e.preventDefault()
                 socket.emit('entered_name', {
                     name: $('[name=name]').val()
                 })
+            })
+
+            socket.on('new_name', function(data) {
+                console.log(data.new_name)
+                $('#names').html(data.new_name)
             })
         })
     </script>
@@ -29,6 +35,7 @@
               <h1>Your Name</h1>
               <input type="text" name="name">
           </form>
+          <h2 id="names"></h2>
       </div>
 
 
