@@ -28,8 +28,6 @@
                 $('#chat_page').fadeIn()
             })
 
-
-
             socket.on('new_name', function (data) {
                 var newName = document.createElement("h2")
                 var t = document.createTextNode(data.new_name + " joined")

@@ -22,7 +22,6 @@ var size = 0
 var addedName = false
 // socket code
 io.sockets.on('connection', function(socket) {
-    console.log(socket.id + " joined")
 
     socket.on("entered_name", function(data) {
         size++
