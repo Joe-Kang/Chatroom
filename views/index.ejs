@@ -1,48 +1,72 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Chat Room</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script type ="text/javascript">
-        $(document).ready(function() {
-            var socket = io.connect() 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#chat_page').hide()
+            var socket = io.connect()
 
-            $('form').submit(function(e) {
+            $('form').submit(function (e) {
                 e.preventDefault()
                 socket.emit('entered_name', {
                     name: $('[name=name]').val()
                 })
+                $('#login_page').fadeOut()
+                $('#chat_page').fadeIn()
             })
 
-            socket.on('new_name', function(data) {
-                console.log(data.new_name)
-                $('#names').html(data.new_name)
+
+
+            socket.on('new_name', function (data) {
+                var newName = document.createElement("h2")
+                var t = document.createTextNode(data.new_name + " joined")
+                var newSize = document.createElement("h2")
+                var size = document.createTextNode("There are " + data.size + " participants")
+                newName.appendChild(t)
+                newSize.appendChild(size)
+                document.getElementById("messages").appendChild(newName)
+                document.getElementById("messages").appendChild(newSize)
+            })
+
+            socket.on('user_left', function(data) {
+                var leftName = document.createElement("h2")
+                var t = document.createTextNode(data.left_name + " left")
+                var newSize = document.createElement("h2")
+                var size = document.createTextNode("There are " + data.size + " participants")
+                leftName.appendChild(t)
+                newSize.appendChild(size)
+                document.getElementById("messages").appendChild(leftName)
+                document.getElementById("messages").appendChild(newSize)
             })
         })
     </script>
-  </head>
-  <body>
-      <div>
-          <form>
-              <h1>Your Name</h1>
-              <input type="text" name="name">
-          </form>
-          <h2 id="names"></h2>
-      </div>
+</head>
 
+<body>
+    <div id="chat_page">
+        <div id="messages"></div>
+        <div id="text_input"></div>
+    </div>
+    <div id="login_page">
+        <form>
+            <h1>Your Name</h1>
+            <input type="text" name="name">
+        </form>
+    </div>
 
+</body>
 
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    
-  </body>
 </html>

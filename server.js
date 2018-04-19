@@ -18,17 +18,24 @@ var io = require('socket.io').listen(server); // socket
 // root route to render the index.ejs view
 app.get('/', function(req, res) { res.render("index"); })
 
-var names = {}
 var size = 0
+var addedName = false
 // socket code
 io.sockets.on('connection', function(socket) {
-    console.log("id: ", socket.id)
+    console.log(socket.id + " joined")
 
     socket.on("entered_name", function(data) {
-        names[size] = data.name
         size++
-        io.emit('new_name', {new_name: data.name})
-        io.emit('existing_names', {names: names})
+        addedName = true
+        socket.username = data.name
+        io.emit('new_name', {new_name: data.name, size: size})
     })
 
+    socket.on('disconnect', function () {
+        if (addedName) {
+            size--
+            socket.broadcast.emit('user_left', {left_name: socket.username, size: size})
+        }
+        
+    })
 })
