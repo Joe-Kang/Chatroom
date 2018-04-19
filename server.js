@@ -30,6 +30,10 @@ io.sockets.on('connection', function(socket) {
         io.emit('new_name', {new_name: data.name, size: size})
     })
 
+    socket.on("entered_message", function(data) {
+        io.emit('new_message', {new_message: data.message, user: socket.username})
+    })
+
     socket.on('disconnect', function () {
         if (addedName) {
             size--

@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
@@ -19,7 +19,7 @@
             $('#chat_page').hide()
             var socket = io.connect()
 
-            $('form').submit(function (e) {
+            $('#name_form').submit(function (e) {
                 e.preventDefault()
                 socket.emit('entered_name', {
                     name: $('[name=name]').val()
@@ -28,26 +28,43 @@
                 $('#chat_page').fadeIn()
             })
 
-            socket.on('new_name', function (data) {
-                var newName = document.createElement("h2")
-                var t = document.createTextNode(data.new_name + " joined")
-                var newSize = document.createElement("h2")
-                var size = document.createTextNode("There are " + data.size + " participants")
-                newName.appendChild(t)
-                newSize.appendChild(size)
-                document.getElementById("messages").appendChild(newName)
-                document.getElementById("messages").appendChild(newSize)
+            $('#message_form').submit(function (e) {
+                e.preventDefault()
+                socket.emit('entered_message', {
+                    message: $('[name=inputMessage]').val()
+                })
             })
 
-            socket.on('user_left', function(data) {
-                var leftName = document.createElement("h2")
+            socket.on('new_name', function (data) {
+                var newName = document.createElement("p")
+                var t = document.createTextNode(data.new_name + " joined")
+                var breakLine = document.createElement("br")
+                var newSize = document.createElement("p")
+                var size = document.createTextNode("There are " + data.size + " participants")
+                newName.appendChild(t)
+                newName.appendChild(breakLine)
+                newName.appendChild(size)
+                document.getElementById("messages").appendChild(newName)
+
+            })
+
+            socket.on('new_message', function(data) {
+                var newMessage = document.createElement("h3")
+                var t = document.createTextNode(data.user + ": " + data.new_message)
+                newMessage.appendChild(t)
+                document.getElementById("messages").appendChild(newMessage)
+            })
+
+            socket.on('user_left', function (data) {
+                var leftName = document.createElement("p")
                 var t = document.createTextNode(data.left_name + " left")
-                var newSize = document.createElement("h2")
+                var breakLine = document.createElement("br")
+                var newSize = document.createElement("p")
                 var size = document.createTextNode("There are " + data.size + " participants")
                 leftName.appendChild(t)
-                newSize.appendChild(size)
+                leftName.appendChild(breakLine)
+                leftName.appendChild(size)
                 document.getElementById("messages").appendChild(leftName)
-                document.getElementById("messages").appendChild(newSize)
             })
         })
     </script>
@@ -56,12 +73,15 @@
 <body>
     <div id="chat_page">
         <div id="messages"></div>
-        <div id="text_input"></div>
+        <div id="message_form">
+            <form id="input_text">
+                <input type="text" name="inputMessage" placeholder="Type here">
+            </form>
+        </div>
     </div>
     <div id="login_page">
-        <form>
-            <h1>Your Name</h1>
-            <input type="text" name="name">
+        <form id="name_form">
+            <input type="text" name="name" placeholder="Enter Name">
         </form>
     </div>
 
