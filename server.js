@@ -2,7 +2,8 @@ var express = require("express"); // require express
 var path = require("path"); // path module
 var bodyParser = require('body-parser'); 
 var app = express(); // create the express app
-
+//SEND HYPERLINK MESSAGES?
+//Validate name
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "./static"))); // static content
