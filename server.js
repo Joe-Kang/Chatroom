@@ -4,11 +4,11 @@ var bodyParser = require('body-parser');
 var app = express(); // create the express app
 //SEND HYPERLINK MESSAGES?
 //Validate name
-
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "./static"))); // static content
-app.set('views', path.join(__dirname, './views')); // setting up views folder
-app.set('view engine', 'ejs'); // setting up ejs
+app.use(express.static(path.join(__dirname, "./static")));
+app.set('views', path.join(__dirname, './views'));
+app.set('view engine', 'ejs');
+console.log(__dirname)
 
 var server = app.listen(8000, function() { // tell the express app to listen on port 8000
     console.log("listening on port 8000");

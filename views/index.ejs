@@ -5,11 +5,12 @@
     <title>Chat Room</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="style.css">
+    
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
@@ -51,8 +52,12 @@
             socket.on('new_message', function(data) {
                 var newMessage = document.createElement("h3")
                 var t = document.createTextNode(data.user + ": " + data.new_message)
+                var timeStamp = document.createElement("p")
+                var time = document.createTextNode(Date.now())
                 newMessage.appendChild(t)
+                timeStamp.appendChild(time)
                 document.getElementById("messages").appendChild(newMessage)
+                document.getElementById("messages").appendChild(timeStamp)
             })
 
             socket.on('user_left', function (data) {
@@ -75,9 +80,10 @@
         <div id="messages"></div>
         <div id="message_form">
             <form id="input_text">
-                <input type="text" name="inputMessage" placeholder="Type here">
+                <input type="text" name="inputMessage" placeholder="Type here" class="input_message">
             </form>
         </div>
+        <h1 class="hello">hello</h1>
     </div>
     <div id="login_page" style="width:100%; bottom:50%; position:absolute">
         <form id="name_form">
