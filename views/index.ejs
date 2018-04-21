@@ -56,12 +56,14 @@
                 var time = document.createTextNode(Date.now())
                 newMessage.appendChild(t)
                 timeStamp.appendChild(time)
+                newMessage.setAttribute("class", "message")
+                timeStamp.setAttribute("class", "message")
                 document.getElementById("messages").appendChild(newMessage)
                 document.getElementById("messages").appendChild(timeStamp)
             })
 
             socket.on('user_left', function (data) {
-                var leftName = document.createElement("p")
+                var leftName = document.createElement("p").setAttribute("style", "text-align: center")
                 var t = document.createTextNode(data.left_name + " left")
                 var breakLine = document.createElement("br")
                 var newSize = document.createElement("p")
@@ -76,18 +78,17 @@
 </head>
 
 <body>
-    <div id="chat_page" class="text-center">
+    <div id="chat_page">
         <div id="messages"></div>
         <div id="message_form">
             <form id="input_text">
-                <input type="text" name="inputMessage" placeholder="Type here" class="input_message">
+                <input type="text" name="inputMessage" placeholder="Type here" id="input_message">
             </form>
         </div>
-        <h1 class="hello">hello</h1>
     </div>
-    <div id="login_page" style="width:100%; bottom:50%; position:absolute">
+    <div id="login_page">
         <form id="name_form">
-            <input type="text" name="name" placeholder="Enter Name" style="width:100%;height:40px;text-align:center">
+            <input type="text" name="name" placeholder="Enter Name" id="input_name">
         </form>
     </div>
 
