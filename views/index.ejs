@@ -17,16 +17,19 @@
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            var names = {}
             $('#chat_page').hide()
             var socket = io.connect()
 
             $('#name_form').submit(function (e) {
                 e.preventDefault()
-                socket.emit('entered_name', {
-                    name: $('[name=name]').val()
-                })
-                $('#login_page').fadeOut()
-                $('#chat_page').fadeIn()
+                if (!names[$('[name=name]').val()]) {
+                    names[$('[name=name]').val()] = $('[name=name]').val()
+                    socket.emit('entered_name', {name: $('[name=name]').val(), names: names})
+                    $('#login_page').hide()
+                    $('#chat_page').show()
+                }
+                
             })
 
             $('#message_form').submit(function (e) {
@@ -37,6 +40,7 @@
             })
 
             socket.on('new_name', function (data) {
+                names = data.names
                 var newName = document.createElement("p")
                 var t = document.createTextNode(data.new_name + " joined")
                 var breakLine = document.createElement("br")
@@ -53,7 +57,9 @@
                 var newMessage = document.createElement("h3")
                 var t = document.createTextNode(data.user + ": " + data.new_message)
                 var timeStamp = document.createElement("p")
-                var time = document.createTextNode(Date.now())
+                var date = new Date()
+                
+                var time = document.createTextNode(date.toLocaleTimeString())
                 newMessage.appendChild(t)
                 timeStamp.appendChild(time)
                 newMessage.setAttribute("class", "message")
@@ -63,7 +69,7 @@
             })
 
             socket.on('user_left', function (data) {
-                var leftName = document.createElement("p").setAttribute("style", "text-align: center")
+                var leftName = document.createElement("p")
                 var t = document.createTextNode(data.left_name + " left")
                 var breakLine = document.createElement("br")
                 var newSize = document.createElement("p")

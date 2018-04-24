@@ -20,15 +20,15 @@ var io = require('socket.io').listen(server); // socket
 app.get('/', function(req, res) { res.render("index"); })
 
 var size = 0
-var addedName = false
+
 // socket code
 io.sockets.on('connection', function(socket) {
-
+    var addedName = false
     socket.on("entered_name", function(data) {
         size++
         addedName = true
         socket.username = data.name
-        io.emit('new_name', {new_name: data.name, size: size})
+        io.emit('new_name', {new_name: data.name, size: size, names: data.names})
     })
 
     socket.on("entered_message", function(data) {
